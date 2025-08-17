@@ -32,18 +32,30 @@ class EmployeeResource extends Resource
                                 ->searchable()
                                 ->multiple()
                                 ->preload()
+                                ->live()
+                                ->afterStateUpdated(function (Set $set) {
+                                    $set('state_id', null);
+                                    $set('city_id', null);
+                                })
                                 ->required(),
                             Forms\Components\Select::make('state_id')
-                                ->relationship(name: 'state', titleAttribute: 'name')
+                                ->options(fn(Get $get): Collection => State::query()
+                                    ->where('country_id', $get('country_id'))
+                                    ->pluck('name', 'id'))
                                 ->searchable()
                                 ->multiple()
                                 ->preload()
+                                ->live()
+                                ->afterStateUpdated(fn (Set $set) => $set('city_id', null))
                                 ->required(),
                             Forms\Components\Select::make('city_id')
-                                ->relationship(name: 'city', titleAttribute: 'name')
+                                ->options(fn(Get $get): Collection => City::query()
+                                    ->where('state_id', $get('state_id'))
+                                    ->pluck('name', 'id'))
                                 ->searchable()
                                 ->multiple()
                                 ->preload()
+                                ->live()
                                 ->required(),
                             Forms\Components\Select::make('department_id')
                                 ->relationship(name: 'department', titleAttribute: 'name')
