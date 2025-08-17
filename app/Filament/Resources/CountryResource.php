@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\CountryResource\RelationManagers\StatesRelationManager;
+use App\Filament\Resources\CountryResource\RelationManagers\EmployeesRelationManager;
 use App\Filament\Resources\CountryResource\Pages;
 use App\Models\Country;
 use Filament\Forms;
@@ -82,10 +84,11 @@ class CountryResource extends Resource
         ]);
     }
 
-    public static function getRelations(): array
+    public static function getRelations(): array // php artisan make:filament-relation-manager CountryResource states name
     {
         return [
-            //
+            StatesRelationManager::class,
+            EmployeesRelationManager::class,
         ];
     }
 

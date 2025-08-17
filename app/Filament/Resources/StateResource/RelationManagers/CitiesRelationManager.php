@@ -1,27 +1,27 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Filament\Resources\CountryResource\RelationManagers;
+namespace App\Filament\Resources\StateResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class StatesRelationManager extends RelationManager
+class CitiesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'states'; // Country::states()
+    protected static string $relationship = 'cities';
 
     public function form(Form $form): Form
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('name')
-                ->label('State Name')
-                ->required()
-                ->maxLength(255),
-        ]);
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+            ]);
     }
 
     public function table(Table $table): Table
@@ -29,13 +29,11 @@ class StatesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                Tables\Columns\TextColumn::make('id')->sortable(),
-                Tables\Columns\TextColumn::make('name')->searchable()->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->toggleable(isToggleHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('name'),
             ])
-            ->filters([])
+            ->filters([
+                //
+            ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
             ])
