@@ -138,7 +138,56 @@ class EmployeeResource extends Resource
                     ->toggleable(isToggleHiddenByDefault: true),
             ])
             ->filters([
-                //
+                // İlişki tabanlı select filtre: departments.name
+                SelectFilter::make('department_id')
+                    ->relationship('department', 'name') // modelde: public function department(){ return $this->belongsTo(Department::class); }
+                    ->searchable()
+                    ->preload()
+                    ->label('Filter by Department')
+                    ->indicator('Department'),
+
+                // Tarih aralığı filtresi (created_at aralığı)
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')->label('Created from'),
+                        DatePicker::make('created_until')->label('Created until'),
+                    ])
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! empty($data['created_from']) && ! empty($data['created_until'])) {
+                            return "Created: {$data['created_from']} → {$data['created_until']}";
+                        }
+
+                        if (! empty($data['created_from'])) {
+                            return "Created ≥ {$data['created_from']}";
+                        }
+
+                        if (! empty($data['created_until'])) {
+                            return "Created ≤ {$data['created_until']}";
+                        }
+
+                        return null;
+                    })
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'] ?? null,
+                                fn (Builder $q, $date) => $q->whereDate('created_at', '>=', $date)
+                            )
+                            ->when(
+                                $data['created_until'] ?? null,
+                                fn (Builder $q, $date) => $q->whereDate('created_at', '<=', $date)
+                            );
+                    })
+                ->indicateUsing(function (array $data): array {
+                    $indicators = [];
+                    if ($data['created_from'] ?? null) {
+                        $indicators['created_from'] = 'Created from' . Carbon::parse($data['created_from'])->format('d/m/Y');
+                    }
+                    if ($data['created_until'] ?? null) {
+                        $indicators['created_until'] = 'Created until' . Carbon::parse($data['created_until'])->format('d/m/Y');
+                    }
+                    return $indicators;
+                }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
