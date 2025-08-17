@@ -47,8 +47,23 @@ class StateResource extends Resource
     {
         return $table
             ->columns([
-                //
-            ])
+                Tables\Columns\TextColumn::make('country.name')
+                    ->sortable()
+                    ->searchable(isIndividual: true, isGlobal: false),
+                Tables\Columns\TextColumn::make('name')
+                    ->label('State Name')
+                    ->sortable()
+                    ->searchable(isIndividual: true)
+                    ->visible(!auth()->user()->email === 'admin@example.com'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggleHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggleHiddenByDefault: true), //->toggleable() → Kolonu gizlenebilir (toggleable) hale getirir.isToggleHiddenByDefault: true → Bu kolon varsayılan olarak gizli olur.Yani admin panelindeki tabloda kullanıcı isterse “Kolonları Göster/Gizle” menüsünden bu kolonu açabilir.
+            ])->defaultSort('country.name', 'desc')
             ->filters([
                 //
             ])
