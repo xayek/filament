@@ -31,7 +31,13 @@ class DepartmentResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make('Department Details')
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                    ]),
+
             ]);
     }
 
@@ -39,7 +45,19 @@ class DepartmentResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Department Name')
+                    ->sortable()
+                    ->searchable(isIndividual: true),
+                Tables\Columns\TextColumn::make('employees_count')->counts('employees'),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggleHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggleHiddenByDefault: true),
             ])
             ->filters([
                 //
