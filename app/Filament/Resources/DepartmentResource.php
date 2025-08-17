@@ -19,10 +19,24 @@ class DepartmentResource extends Resource
     protected static ?string $model = Department::class;
 
     protected static ?string $navigationIcon  = 'heroicon-o-academic-cap';
+    
     protected static ?string $navigationLabel = 'Department';
+
     protected static ?string $modelLabel      = 'Department';
+
     protected static ?string $navigationGroup = 'System Management';
+
     protected static ?int    $navigationSort  = 4;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'success';
+    }
 
     public static function form(Form $form): Form
     {

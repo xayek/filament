@@ -29,7 +29,47 @@ class EmployeeResource extends Resource
     protected static ?string $model = Employee::class;
 
     protected static ?string $navigationIcon  = 'heroicon-o-user-group';
+
     protected static ?string $navigationGroup = 'Employee Management';
+
+    protected static ?string $recordTitleAttribute = 'first_name';
+
+    public static function getGlobalSearchResultTitle(Model $record): string
+    {
+        return $record->last_name;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['first_name', 'last_name', 'middle_name'];
+    }
+
+    public static function getGlobalSearchResultDetails(Model $record): array
+    {
+        return [
+            'Country' => $record->country->name,
+            'State' => $record->state->name,
+            'City' => $record->city->name,
+            'Department' => $record->department->name,
+        ];
+    }
+
+    public static function getGloballySearchEloquentQuery(): Builder //Bu metod Filament’in Global Search (küresel arama) özelliğini özelleştirmek için yazılır.
+                                                                    //Normalde parent::getGlobalSearchEloquentQuery() sadece ana model üzerinden sorgu yapar. Senin örneğinde ise with([...]) eklenerek ilişkiler de eager load edilir.
+    {
+        return parent::getGlobalSearchEloquentQuery()
+            ->with(['country', 'state', 'city', 'department']);
+    }
+    
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return static::getModel()::count() > 10 ? 'warning' : 'success';
+    }
 
     public static function form(Form $form): Form
     {
