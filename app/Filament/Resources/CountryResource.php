@@ -63,6 +63,7 @@ class CountryResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -71,6 +72,21 @@ class CountryResource extends Resource
                 ]),
             ]);
     }
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Section::make('Country Info')
+                    ->schema([
+                        TextEntry::make('country.name')->label('Name'),
+                        TextEntry::make('code')->label('Country Code'),
+                        TextEntry::make('phonecode')->label('Phone Code'),
+                    ])->columns(2)
+            ]);
+    }
+
 
     public static function getRelations(): array
     {

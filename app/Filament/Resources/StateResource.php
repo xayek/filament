@@ -43,6 +43,19 @@ class StateResource extends Resource
             ]);
     }
 
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Section::make('State Info')
+                    ->schema([
+                        TextEntry::make('country.name')->label('Country Name'),
+                        TextEntry::make('name')->label('State Name'),
+                    ])->columns(2)
+            ]);
+    }
+
     public static function table(Table $table): Table
     {
         return $table

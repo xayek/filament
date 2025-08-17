@@ -73,6 +73,23 @@ class DepartmentResource extends Resource
             ]);
     }
 
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                    Section::make('Department Info')
+                    ->schema([
+                        TextEntry::make('name')->label('Name'),
+                        TextEntry::make('employees_count')
+                            ->state(function (Model $record): int {
+                                 return $record->employees()->count();
+                        }),
+                    ])->columns(2)
+            ]);
+    }
+
+
     public static function getRelations(): array
     {
         return [
@@ -85,7 +102,7 @@ class DepartmentResource extends Resource
         return [
             'index' => Pages\ListDepartments::route('/'),
             'create' => Pages\CreateDepartment::route('/create'),
-            'view' => Pages\ViewDepartment::route('/{record}'),
+            // 'view' => Pages\ViewDepartment::route('/{record}'),
             'edit' => Pages\EditDepartment::route('/{record}/edit'),
         ];
     }
