@@ -17,4 +17,12 @@ class EditEmployee extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->title('Employee Updated')
+            ->body('The employee has been updated successfully.')
+            ->success();
+    }
 }
