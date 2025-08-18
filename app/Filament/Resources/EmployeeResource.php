@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use Illuminate\Database\Eloquent\Model;
 use App\Filament\Resources\EmployeeResource\Pages;
 use App\Models\City;
 use App\Models\Country;
